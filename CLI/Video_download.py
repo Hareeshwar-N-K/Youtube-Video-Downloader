@@ -2,12 +2,19 @@
 Developed by Hareeshwar N K
 """
 from pytube import YouTube
+
+#for invalid links or no internet connection
+class LinkInvalidException(Exception):
+    def __init__(self,msg="Your Link is invalid or Check Internet Connection"):
+        super().__init__(msg)
+        
 def check_link(url):
     """Checks if the provided YouTube URL is valid."""
     try:
         YouTube(url).check_availability()
         return True
-    except Exception:
+    except Exception as e:
+        print("Error: ",e)
         return False
 
 def get_video_stream(yt, resolution):
@@ -64,7 +71,7 @@ def video_download(url, path="", resolution="highest",yestoall=False):
     """
 
     if not check_link(url):
-        return "Link is invalid. or Check Internet Connection..."
+        raise LinkInvalidException("Link is invalid. or Check Internet Connection...")
 
     try:
         yt = YouTube(url)
